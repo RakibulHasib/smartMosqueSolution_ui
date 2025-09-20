@@ -2,7 +2,7 @@
 
 import { saveTokens } from "@/lib/auth";
 import Link from "next/link";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function RegisterPage() {
@@ -41,8 +41,12 @@ export default function RegisterPage() {
       saveTokens(response?.data?.accessToken); // localStorage
       // Redirect after login
       router.push("/home");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong");
+      }
     } finally {
       setLoading(false);
     }

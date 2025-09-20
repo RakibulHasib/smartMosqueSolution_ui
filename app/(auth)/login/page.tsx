@@ -2,7 +2,7 @@
 
 import { saveTokens } from "@/lib/auth";
 import Link from "next/link";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function LoginPage() {
@@ -40,9 +40,12 @@ export default function LoginPage() {
       saveTokens(response?.data?.accessToken); // localStorage
       // Redirect after login
       router.push("/home");
-    } catch (err: any) {
-      setError(err.message);
-      console.log(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong");
+      }
     } finally {
       setLoading(false);
     }
@@ -114,7 +117,7 @@ export default function LoginPage() {
       </form>
 
       <p className="text-sm text-center text-gray-600 dark:text-gray-400">
-        Don't have an account?{" "}
+        Don&apos;t have an account?{" "}
         <Link href="/register" className="text-blue-600 hover:underline">
           Register
         </Link>
